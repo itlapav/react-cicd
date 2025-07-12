@@ -16,10 +16,11 @@ pipeline {
     }
 
     stage('Install Dependencies') {
-      steps {
-        sh 'npm install'
-      }
-    }
+  steps {
+    sh '/usr/local/bin/npm install'
+  }
+}
+
 
     stage('Build React App') {
       steps {
