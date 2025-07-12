@@ -10,6 +10,7 @@ pipeline {
     CONTAINER_NAME = 'react-cicd-container'
     HOST_PORT = '8081'
     CONTAINER_PORT = '80'
+    PATH = "/usr/local/bin:${env.PATH}"  // Add Docker CLI to PATH
   }
 
   stages {
@@ -33,19 +34,19 @@ pipeline {
 
     stage('Docker Build') {
       steps {
-        sh "docker build -t ${IMAGE_NAME} ."
+        sh "/usr/local/bin/docker build -t ${IMAGE_NAME} ."
       }
     }
 
     stage('Stop Previous Container') {
       steps {
-        sh "docker rm -f ${CONTAINER_NAME} || true"
+        sh "/usr/local/bin/docker rm -f ${CONTAINER_NAME} || true"
       }
     }
 
     stage('Run Docker Container') {
       steps {
-        sh "docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}"
+        sh "/usr/local/bin/docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}"
       }
     }
   }
