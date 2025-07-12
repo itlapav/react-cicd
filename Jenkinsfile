@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    IMAGE_NAME = 'react-cicd-app'
+    IMAGE_NAME = 'react-cicd'
     CONTAINER_NAME = 'react-cicd-container'
     HOST_PORT = '8081'
     CONTAINER_PORT = '80'
