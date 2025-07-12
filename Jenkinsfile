@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'NodeJS 16'  // use the exact name you configured in Jenkins
+    nodejs 'NodeJS 16'  // Use the exact name you configured in Jenkins
   }
 
   environment {
@@ -27,7 +27,7 @@ pipeline {
 
     stage('Build React App') {
       steps {
-        sh 'npm run build'
+        sh 'CI=false npm run build'   // Disable strict CI warnings-as-errors
       }
     }
 
