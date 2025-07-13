@@ -26,6 +26,12 @@ pipeline {
       }
     }
 
+stage('Run Tests') {                // 👈 Add this block
+  steps {
+    sh 'npm test -- --watchAll=false'
+  }
+}
+
     stage('Build React App') {
       steps {
         sh 'CI=false npm run build'   // Disable strict CI warnings-as-errors
