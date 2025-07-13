@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'NodeJS 16'  // Use the exact name you configured in Jenkins
+    nodejs 'NodeJS 16'
   }
 
   environment {
@@ -10,7 +10,7 @@ pipeline {
     CONTAINER_NAME = 'react-cicd-container'
     HOST_PORT = '8081'
     CONTAINER_PORT = '80'
-    PATH = "/usr/local/bin:${env.PATH}"  // Add Docker CLI to PATH
+    PATH = "/usr/local/bin:${env.PATH}"
   }
 
   stages {
@@ -34,44 +34,36 @@ pipeline {
 
     stage('Build React App') {
       steps {
-        sh 'CI=false npm run build'   // Disable strict CI warnings-as-errors
+        sh 'CI=false npm run build'
       }
     }
 
     stage('Docker Build') {
       steps {
-        sh "/usr/local/bin/docker build -t ${IMAGE_NAME} ."
+        sh "docker build -t ${IMAGE_NAME} ."
       }
     }
 
-    stage('Docker Login and Push') {
+    stage('Push Docker Image') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh '''
-            echo "$DOCKER_PASS" | /usr/local/bin/docker login -u "$DOCKER_USER" --password-stdin
-            /usr/local/bin/docker tag ${IMAGE_NAME} $DOCKER_USER/${IMAGE_NAME}:latest
-            /usr/local/bin/docker push $DOCKER_USER/${IMAGE_NAME}:latest
-          '''
+        sh "docker tag ${IMAGE_NAME} itlapav933/${IMAGE_NAME}:latest"
+        sh "docker push itlapav933/${IMAGE_NAME}:latest"
+      }
+    }
+
+    stage('Deploy to Kubernetes') {
+      steps {
+        withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+          sh 'kubectl apply -f k8s/deployment.yaml'
+          sh 'kubectl apply -f k8s/service.yaml'
         }
-      }
-    }
-
-    stage('Stop Previous Container') {
-      steps {
-        sh "/usr/local/bin/docker rm -f ${CONTAINER_NAME} || true"
-      }
-    }
-
-    stage('Run Docker Container') {
-      steps {
-        sh "/usr/local/bin/docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}"
       }
     }
   }
 
   post {
     success {
-      echo "✅ Deployment successful! Visit http://localhost:${HOST_PORT}"
+      echo "✅ Deployed successfully to Kubernetes!"
     }
     failure {
       echo "❌ Build or deployment failed."
