@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: react-cicd-service
 spec:
+  type: NodePort
   selector:
     app: react-cicd
-  type: NodePort
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 3000
       nodePort: 30080
