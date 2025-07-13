@@ -49,7 +49,7 @@ function App() {
       </main>
 
       <footer>
-        <p>© 2025 Pavan Itla. All rights reserved.</p>
+        <p>©Pavan Itla</p>
       </footer>
     </div>
   );
