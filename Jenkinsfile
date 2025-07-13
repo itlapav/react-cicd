@@ -26,11 +26,11 @@ pipeline {
       }
     }
 
-stage('Run Tests') {                // 👈 Add this block
-  steps {
-    sh 'npm test -- --watchAll=false'
-  }
-}
+    stage('Run Tests') {
+      steps {
+        sh 'npm test -- --watchAll=false'
+      }
+    }
 
     stage('Build React App') {
       steps {
@@ -41,6 +41,18 @@ stage('Run Tests') {                // 👈 Add this block
     stage('Docker Build') {
       steps {
         sh "/usr/local/bin/docker build -t ${IMAGE_NAME} ."
+      }
+    }
+
+    stage('Docker Login and Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh '''
+            echo "$DOCKER_PASS" | /usr/local/bin/docker login -u "$DOCKER_USER" --password-stdin
+            /usr/local/bin/docker tag ${IMAGE_NAME} $DOCKER_USER/${IMAGE_NAME}:latest
+            /usr/local/bin/docker push $DOCKER_USER/${IMAGE_NAME}:latest
+          '''
+        }
       }
     }
 
