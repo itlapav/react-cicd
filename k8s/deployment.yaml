@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: react-cicd-deployment
+  name: react-cicd
 spec:
   replicas: 1
   selector:
@@ -13,7 +13,7 @@ spec:
         app: react-cicd
     spec:
       containers:
-        - name: react-cicd
-          image: itlapav933/react-cicd:latest
-          ports:
-            - containerPort: 80
+      - name: react-cicd
+        image: itlapav933/react-cicd:latest
+        ports:
+        - containerPort: 3000
