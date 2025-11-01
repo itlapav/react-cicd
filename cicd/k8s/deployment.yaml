@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: react-cicd-deployment
+  name: react-cicd
 spec:
   replicas: 1
   selector:
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: react-cicd
-          image: itlapav933/react-cicd:latest
+          image: itlapav/react-cicd:latest  # Replace with your Docker Hub image
           ports:
             - containerPort: 80
