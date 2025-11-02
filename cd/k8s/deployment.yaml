@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: react-cicd
+  labels:
+    app: react-cicd
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: react-cicd
@@ -13,8 +15,9 @@ spec:
         app: react-cicd
     spec:
       containers:
-      - name: react-cicd
-        image: <your-aws-account-id>.dkr.ecr.us-east-1.amazonaws.com/react-cicd:latest
-        imagePullPolicy: Always   # 👈 add this line
-        ports:
-        - containerPort: 80
+        - name: react-cicd
+          image: pavanitla/react-cicd:latest  # this gets replaced by GitHub Actions
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always   # 👈 forces pulling the latest image each time
+      restartPolicy: Always
