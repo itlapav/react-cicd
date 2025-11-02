@@ -49,7 +49,7 @@ function App() {
       </main>
 
       <footer>
-        <p>SRE</p>
+        <p>SRE Principles</p>
       </footer>
     </div>
   );
