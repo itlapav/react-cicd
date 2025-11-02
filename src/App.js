@@ -49,7 +49,7 @@ function App() {
       </main>
 
       <footer>
-        <p>Itla Pavan test</p>
+        <p>SRE</p>
       </footer>
     </div>
   );
