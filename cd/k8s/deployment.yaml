@@ -13,7 +13,8 @@ spec:
         app: react-cicd
     spec:
       containers:
-        - name: react-cicd
-          image: itlapav/react-cicd:latest  # Replace with your Docker Hub image
-          ports:
-            - containerPort: 80
+      - name: react-cicd
+        image: <your-aws-account-id>.dkr.ecr.us-east-1.amazonaws.com/react-cicd:latest
+        imagePullPolicy: Always   # 👈 add this line
+        ports:
+        - containerPort: 80
