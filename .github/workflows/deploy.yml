@@ -1,5 +1,4 @@
 # .github/workflows/main.yml
-
 name: CI-CD Pipeline
 
 on:
@@ -20,12 +19,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image with unique tag
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/react-cicd:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest
 
   deploy:
     needs: build
@@ -45,7 +46,8 @@ jobs:
         run: |
           aws eks update-kubeconfig --name react-cicd-cluster --region us-east-1
 
-      - name: Deploy new image to EKS
+      - name: Deploy new image to EKS (auto-rolling)
         run: |
-          kubectl set image deployment/react-cicd react-cicd=${{ secrets.DOCKER_USERNAME }}/react-cicd:latest
+          IMAGE_TAG=${{ github.sha }}
+          kubectl set image deployment/react-cicd react-cicd=${{ secrets.DOCKER_USERNAME }}/react-cicd:$IMAGE_TAG
           kubectl rollout status deployment/react-cicd

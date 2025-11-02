@@ -49,7 +49,7 @@ function App() {
       </main>
 
       <footer>
-        <p>DEVOPS SRE</p>
+        <p>DEVOPS SRE Principles</p>
       </footer>
     </div>
   );
